@@ -1,0 +1,790 @@
+/* ==========================================================================
+   FEDCO Theme for ERPNext v16 / Frappe v16
+   --------------------------------------------------------------------------
+   Palette sampled directly from the FEDCO mark:
+     terracotta  #984A35   (57% of the logo — the brand anchor)
+     gold        #F8C525   (the cocoa pods)
+     green       #1D9644   (the foliage)
+
+   Accessibility constraints that shaped these tokens:
+     · terracotta on white = 6.24:1  -> AA, safe for buttons and body text
+     · gold on white       = 1.61:1  -> FAILS. Gold NEVER carries white text.
+                                        It is used as a surface with ink text,
+                                        or as a thin accent rule only.
+     · logo green on white = 3.82:1  -> large text only. Darkened to #17803A
+                                        (5.02:1) wherever green carries text.
+
+   Everything is driven by Frappe CSS custom properties, so the theme rides on
+   top of the framework rather than fighting it. No !important except where a
+   framework inline style has to be beaten.
+   ========================================================================== */
+
+:root {
+	/* ---- brand ramp ---------------------------------------------------- */
+	--fedco-50:  #FDF6F3;
+	--fedco-100: #F7E4DD;
+	--fedco-200: #EFC7BA;
+	--fedco-300: #DDA08B;
+	--fedco-400: #C3705A;
+	--fedco-500: #984A35;   /* brand */
+	--fedco-600: #863F2C;
+	--fedco-700: #6B3222;
+	--fedco-800: #52261A;
+	--fedco-900: #3A1B12;
+
+	--fedco-gold:      #F8C525;
+	--fedco-gold-soft: #FDF0C4;
+	--fedco-gold-deep: #C89A12;
+
+	--fedco-green:      #1D9644;
+	--fedco-green-text: #17803A;   /* AA-safe green for text */
+	--fedco-green-soft: #E3F5E9;
+
+	--fedco-ink:   #2A1A14;
+	--fedco-muted: #7A6660;
+
+	/* ---- map onto Frappe tokens (light) -------------------------------- */
+	--primary: var(--fedco-500);
+	--primary-color: var(--fedco-500);
+	--brand-color: var(--fedco-500);
+
+	--text-color: var(--fedco-ink);
+	--text-muted: var(--fedco-muted);
+	--text-light: #9C8880;
+	--heading-color: var(--fedco-900);
+
+	--bg-color: #FBF7F5;
+	--fg-color: #FFFFFF;
+	--card-bg: #FFFFFF;
+	--subtle-fg: var(--fedco-50);
+	--control-bg: #FFFFFF;
+	--control-bg-on-gray: var(--fedco-50);
+	--disabled-control-bg: #F2EBE8;
+
+	--border-color: #EADFDA;
+	--dark-border-color: #D9C7C0;
+	--border-primary: var(--fedco-500);
+
+	--btn-primary: var(--fedco-500);
+	--btn-primary-hover: var(--fedco-600);
+
+	--navbar-bg: #FFFFFF;
+	--navbar-height: 56px;
+	--sidebar-bg: var(--fedco-700);
+	--sidebar-fg: #F7E9E4;
+	--sidebar-active-bg: rgba(255, 255, 255, 0.14);
+	--sidebar-hover-bg: rgba(255, 255, 255, 0.08);
+
+	--shadow-sm: 0 1px 2px rgba(58, 27, 18, 0.06);
+	--shadow-base: 0 2px 8px rgba(58, 27, 18, 0.08);
+	--shadow-md: 0 6px 18px rgba(58, 27, 18, 0.10);
+	--shadow-lg: 0 14px 34px rgba(58, 27, 18, 0.14);
+
+	--radius-sm: 5px;
+	--radius: 8px;
+	--radius-md: 10px;
+	--radius-lg: 14px;
+	--radius-full: 999px;
+
+	--focus-ring: 0 0 0 3px rgba(152, 74, 53, 0.28);
+
+	/* semantic */
+	--alert-bg-success: var(--fedco-green-soft);
+	--alert-text-success: #106B2E;
+	--alert-bg-warning: var(--fedco-gold-soft);
+	--alert-text-warning: #7A5B02;
+	--alert-bg-danger: #FCE9E6;
+	--alert-text-danger: #A32D18;
+	--alert-bg-info: var(--fedco-100);
+	--alert-text-info: var(--fedco-700);
+
+	--green-avatar-bg: var(--fedco-green);
+	--blue-avatar-bg: var(--fedco-500);
+}
+
+/* ---- dark mode ---------------------------------------------------------
+   Terracotta is too dark to read on a dark ground, so the brand steps up the
+   ramp to --fedco-300. Gold stays as the accent since it reads well on dark.
+   ------------------------------------------------------------------------ */
+[data-theme="dark"] {
+	--primary: var(--fedco-300);
+	--primary-color: var(--fedco-300);
+	--brand-color: var(--fedco-300);
+
+	--text-color: #F2E7E3;
+	--text-muted: #B49E97;
+	--text-light: #8E7A73;
+	--heading-color: #FBF3F0;
+
+	--bg-color: #17100D;
+	--fg-color: #211815;
+	--card-bg: #211815;
+	--subtle-fg: #2A1F1B;
+	--control-bg: #2A1F1B;
+	--control-bg-on-gray: #322622;
+	--disabled-control-bg: #2A1F1B;
+
+	--border-color: #3A2C27;
+	--dark-border-color: #4A3830;
+
+	--btn-primary: var(--fedco-400);
+	--btn-primary-hover: var(--fedco-300);
+
+	--navbar-bg: #1D1512;
+	--sidebar-bg: #1A1210;
+	--sidebar-fg: #E8D8D2;
+
+	--focus-ring: 0 0 0 3px rgba(221, 160, 139, 0.30);
+
+	--alert-bg-success: #14301F;
+	--alert-text-success: #6FD694;
+	--alert-bg-warning: #33280A;
+	--alert-text-warning: var(--fedco-gold);
+	--alert-bg-danger: #3A1A14;
+	--alert-text-danger: #F09A85;
+	--alert-bg-info: #2E1D17;
+	--alert-text-info: var(--fedco-300);
+}
+
+/* Tokens built from the light ramp would go dark-on-dark here, so the
+   badge and avatar surfaces are restated for the dark ground. */
+[data-theme="dark"] .badge-primary {
+	background-color: #3A2A24;
+	color: var(--fedco-300);
+}
+
+[data-theme="dark"] .avatar-frame {
+	background-color: #3A2A24;
+	color: var(--fedco-200);
+}
+
+[data-theme="dark"] .indicator-pill.blue {
+	background-color: #3A2A24;
+	color: var(--fedco-300);
+}
+
+[data-theme="dark"] .indicator-pill.orange {
+	background-color: #33280A;
+	color: var(--fedco-gold);
+}
+
+[data-theme="dark"] .indicator-pill.green {
+	background-color: #14301F;
+	color: #6FD694;
+}
+
+/* ==========================================================================
+   Navbar
+   ========================================================================== */
+.navbar {
+	background-color: var(--navbar-bg);
+	border-bottom: 1px solid var(--border-color);
+	box-shadow: var(--shadow-sm);
+	min-height: var(--navbar-height);
+}
+
+/* Gold hairline under the navbar — the one place gold appears at full
+   strength, where it carries no text and cannot fail contrast. */
+.navbar::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -1px;
+	height: 2px;
+	background: linear-gradient(90deg, var(--fedco-500) 0%, var(--fedco-gold) 45%, var(--fedco-green) 100%);
+	opacity: 0.9;
+}
+
+.navbar-brand img,
+.app-logo,
+.navbar .app-logo {
+	height: 28px;
+	width: auto;
+	border-radius: var(--radius-sm);
+}
+
+.navbar .nav-link,
+.navbar .dropdown-toggle {
+	color: var(--text-color);
+	border-radius: var(--radius);
+	transition: background-color 0.15s ease;
+}
+
+.navbar .nav-link:hover {
+	background-color: var(--fedco-50);
+	color: var(--fedco-600);
+}
+
+[data-theme="dark"] .navbar .nav-link:hover {
+	background-color: rgba(255, 255, 255, 0.06);
+	color: var(--fedco-200);
+}
+
+/* search */
+#navbar-search,
+.navbar .search-bar .awesomplete input {
+	background-color: var(--fedco-50);
+	border: 1px solid transparent;
+	border-radius: var(--radius-full);
+	transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+#navbar-search:focus,
+.navbar .search-bar .awesomplete input:focus {
+	background-color: var(--fg-color);
+	border-color: var(--fedco-300);
+	box-shadow: var(--focus-ring);
+	outline: none;
+}
+
+[data-theme="dark"] #navbar-search,
+[data-theme="dark"] .navbar .search-bar .awesomplete input {
+	background-color: var(--control-bg);
+}
+
+/* ==========================================================================
+   Sidebar — deep terracotta panel, mirroring the reference layout
+   ========================================================================== */
+.layout-side-section .sidebar-menu,
+.desk-sidebar,
+.standard-sidebar {
+	background-color: transparent;
+}
+
+.desk-sidebar .desk-sidebar-item,
+.standard-sidebar-item {
+	border-radius: var(--radius);
+	transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.desk-sidebar .desk-sidebar-item:hover,
+.standard-sidebar-item:hover {
+	background-color: var(--fedco-50);
+}
+
+.desk-sidebar .desk-sidebar-item.selected,
+.standard-sidebar-item.selected {
+	background-color: var(--fedco-100);
+	color: var(--fedco-700);
+	font-weight: 600;
+	position: relative;
+}
+
+/* active marker rail */
+.desk-sidebar .desk-sidebar-item.selected::before,
+.standard-sidebar-item.selected::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 18%;
+	bottom: 18%;
+	width: 3px;
+	border-radius: 0 3px 3px 0;
+	background: var(--fedco-500);
+}
+
+[data-theme="dark"] .desk-sidebar .desk-sidebar-item:hover,
+[data-theme="dark"] .standard-sidebar-item:hover {
+	background-color: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] .desk-sidebar .desk-sidebar-item.selected,
+[data-theme="dark"] .standard-sidebar-item.selected {
+	background-color: rgba(221, 160, 139, 0.16);
+	color: var(--fedco-200);
+}
+
+/* workspace icons pick up the brand instead of stock blue */
+.sidebar-item-icon .icon,
+.desk-sidebar-item .icon use,
+.standard-sidebar-item .icon use {
+	stroke: var(--fedco-600);
+}
+
+[data-theme="dark"] .sidebar-item-icon .icon,
+[data-theme="dark"] .desk-sidebar-item .icon use {
+	stroke: var(--fedco-300);
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+.btn {
+	border-radius: var(--radius);
+	font-weight: 500;
+	transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+}
+
+.btn:active {
+	transform: translateY(1px);
+}
+
+.btn-primary,
+.btn-primary:not(:disabled):not(.disabled) {
+	background-color: var(--fedco-500);
+	border-color: var(--fedco-500);
+	color: #FFFFFF;
+	box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:not(:disabled):not(.disabled):active {
+	background-color: var(--fedco-600);
+	border-color: var(--fedco-600);
+	color: #FFFFFF;
+}
+
+.btn-primary:focus-visible {
+	box-shadow: var(--focus-ring);
+	outline: none;
+}
+
+.btn-secondary,
+.btn-default {
+	background-color: var(--fg-color);
+	border: 1px solid var(--border-color);
+	color: var(--text-color);
+}
+
+.btn-secondary:hover,
+.btn-default:hover {
+	background-color: var(--fedco-50);
+	border-color: var(--fedco-300);
+	color: var(--fedco-700);
+}
+
+[data-theme="dark"] .btn-secondary:hover,
+[data-theme="dark"] .btn-default:hover {
+	background-color: var(--control-bg-on-gray);
+	border-color: var(--fedco-600);
+	color: var(--fedco-200);
+}
+
+.btn-danger {
+	background-color: #B3341C;
+	border-color: #B3341C;
+}
+
+.btn-success {
+	background-color: var(--fedco-green-text);
+	border-color: var(--fedco-green-text);
+}
+
+/* Gold call-to-action. Ink text only — gold on white text is 1.61:1. */
+.btn-fedco-accent {
+	background-color: var(--fedco-gold);
+	border-color: var(--fedco-gold);
+	color: var(--fedco-ink);
+	font-weight: 600;
+}
+
+.btn-fedco-accent:hover {
+	background-color: var(--fedco-gold-deep);
+	color: var(--fedco-ink);
+}
+
+/* ==========================================================================
+   Links, form controls, focus
+   ========================================================================== */
+a,
+.text-primary {
+	color: var(--fedco-600);
+}
+
+a:hover {
+	color: var(--fedco-700);
+}
+
+[data-theme="dark"] a,
+[data-theme="dark"] .text-primary {
+	color: var(--fedco-300);
+}
+
+.form-control,
+.input-with-feedback,
+select.form-control {
+	background-color: var(--control-bg);
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius-sm);
+	color: var(--text-color);
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus,
+.input-with-feedback:focus,
+.frappe-control input:focus,
+.frappe-control select:focus,
+.frappe-control textarea:focus {
+	border-color: var(--fedco-400);
+	box-shadow: var(--focus-ring);
+	outline: none;
+}
+
+/* Keyboard focus is visible everywhere. Removing this fails WCAG 2.4.7. */
+*:focus-visible {
+	outline: 2px solid var(--fedco-500);
+	outline-offset: 2px;
+}
+
+.checkbox input[type="checkbox"]:checked,
+input[type="checkbox"]:checked {
+	accent-color: var(--fedco-500);
+}
+
+/* ==========================================================================
+   Cards, sections, list & report views
+   ========================================================================== */
+.widget,
+.form-section,
+.card,
+.frappe-card,
+.form-page > .form-layout > .form-page-section {
+	background-color: var(--card-bg);
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius-md);
+	box-shadow: var(--shadow-sm);
+}
+
+.widget:hover {
+	box-shadow: var(--shadow-base);
+}
+
+.section-head,
+.form-section .section-head {
+	color: var(--fedco-700);
+	font-weight: 600;
+	letter-spacing: 0.2px;
+}
+
+[data-theme="dark"] .section-head {
+	color: var(--fedco-300);
+}
+
+.list-row-head,
+.dt-row--header .dt-cell,
+.dt-row-header {
+	background-color: var(--fedco-50);
+	border-bottom: 1px solid var(--border-color);
+	color: var(--fedco-700);
+	font-weight: 600;
+}
+
+[data-theme="dark"] .list-row-head,
+[data-theme="dark"] .dt-row--header .dt-cell {
+	background-color: var(--subtle-fg);
+	color: var(--fedco-200);
+}
+
+.list-row:hover,
+.list-row-container:hover {
+	background-color: var(--fedco-50);
+}
+
+[data-theme="dark"] .list-row:hover {
+	background-color: rgba(255, 255, 255, 0.04);
+}
+
+.list-row-checkbox:checked {
+	accent-color: var(--fedco-500);
+}
+
+/* keep the datatable readable against the brand ground */
+.dt-cell--focus {
+	border: 1px solid var(--fedco-400) !important;
+}
+
+/* ==========================================================================
+   Indicators, badges, alerts
+   ========================================================================== */
+.indicator-pill,
+.indicator {
+	border-radius: var(--radius-full);
+	font-weight: 500;
+}
+
+.indicator-pill.green,
+.indicator.green::before { background-color: var(--fedco-green); }
+
+.indicator-pill.blue,
+.indicator.blue::before { background-color: var(--fedco-500); }
+
+.indicator-pill.orange,
+.indicator.orange::before { background-color: var(--fedco-gold-deep); }
+
+.alert-success { background-color: var(--alert-bg-success); color: var(--alert-text-success); border-color: transparent; }
+.alert-warning { background-color: var(--alert-bg-warning); color: var(--alert-text-warning); border-color: transparent; }
+.alert-danger  { background-color: var(--alert-bg-danger);  color: var(--alert-text-danger);  border-color: transparent; }
+.alert-info    { background-color: var(--alert-bg-info);    color: var(--alert-text-info);    border-color: transparent; }
+
+.badge-primary {
+	background-color: var(--fedco-100);
+	color: var(--fedco-700);
+}
+
+/* progress / sliders */
+.progress-bar {
+	background-color: var(--fedco-500);
+}
+
+/* ==========================================================================
+   Page head, tabs, breadcrumbs
+   ========================================================================== */
+.page-head {
+	background-color: var(--bg-color);
+	border-bottom: 1px solid var(--border-color);
+}
+
+.page-title .title-text {
+	color: var(--heading-color);
+	font-weight: 600;
+}
+
+.form-tabs .nav-link,
+.nav-tabs .nav-link {
+	color: var(--text-muted);
+	border: none;
+	border-bottom: 2px solid transparent;
+	border-radius: 0;
+	font-weight: 500;
+}
+
+.form-tabs .nav-link.active,
+.nav-tabs .nav-link.active {
+	color: var(--fedco-700);
+	border-bottom-color: var(--fedco-500);
+	background: transparent;
+}
+
+[data-theme="dark"] .form-tabs .nav-link.active {
+	color: var(--fedco-200);
+	border-bottom-color: var(--fedco-300);
+}
+
+.breadcrumb .breadcrumb-item a {
+	color: var(--text-muted);
+}
+
+.breadcrumb .breadcrumb-item a:hover {
+	color: var(--fedco-600);
+}
+
+/* ==========================================================================
+   Modals, dropdowns, tooltips
+   ========================================================================== */
+.modal-content {
+	border-radius: var(--radius-lg);
+	border: 1px solid var(--border-color);
+	box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+	border-bottom: 1px solid var(--border-color);
+	background: linear-gradient(180deg, var(--fedco-50) 0%, var(--fg-color) 100%);
+	border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+[data-theme="dark"] .modal-header {
+	background: var(--subtle-fg);
+}
+
+.dropdown-menu {
+	border-radius: var(--radius-md);
+	border: 1px solid var(--border-color);
+	box-shadow: var(--shadow-md);
+	padding: 6px;
+}
+
+.dropdown-item {
+	border-radius: var(--radius-sm);
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+	background-color: var(--fedco-50);
+	color: var(--fedco-700);
+}
+
+[data-theme="dark"] .dropdown-item:hover {
+	background-color: rgba(255, 255, 255, 0.07);
+	color: var(--fedco-200);
+}
+
+/* ==========================================================================
+   Responsive
+   --------------------------------------------------------------------------
+   Frappe is responsive out of the box; these adjust for touch on the screens
+   people actually approve claims and advances from.
+   ========================================================================== */
+
+/* tablets and below */
+@media (max-width: 991.98px) {
+	.page-head {
+		position: sticky;
+		top: var(--navbar-height);
+		z-index: 5;
+	}
+
+	.layout-side-section {
+		border-right: none;
+	}
+
+	/* let wide report tables scroll rather than crush the columns */
+	.report-wrapper,
+	.dt-scrollable,
+	.form-grid-container {
+		-webkit-overflow-scrolling: touch;
+		overflow-x: auto;
+	}
+}
+
+/* phones */
+@media (max-width: 767.98px) {
+	:root {
+		--navbar-height: 52px;
+	}
+
+	/* 44px minimum touch target — below this, tap accuracy drops sharply */
+	.btn,
+	.nav-link,
+	.dropdown-item,
+	.list-row-col a,
+	.sidebar-item-label {
+		min-height: 44px;
+		display: flex;
+		align-items: center;
+	}
+
+	.btn-sm {
+		min-height: 38px;
+	}
+
+	.page-actions .btn {
+		flex: 1 1 auto;
+		justify-content: center;
+	}
+
+	/* stack the primary actions rather than letting them overflow */
+	.page-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+	}
+
+	.form-column {
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	.modal-dialog {
+		margin: 8px;
+		max-width: calc(100% - 16px);
+	}
+
+	/* iOS zooms the page when a focused input is under 16px */
+	.form-control,
+	input,
+	select,
+	textarea {
+		font-size: 16px;
+	}
+
+	.list-row-col:not(.list-subject) {
+		display: none;
+	}
+
+	.list-subject {
+		flex: 1 1 auto;
+	}
+}
+
+/* very small phones */
+@media (max-width: 400px) {
+	.page-title .title-text {
+		font-size: 1.05rem;
+	}
+}
+
+/* ==========================================================================
+   Motion and print
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+@media print {
+	.navbar,
+	.layout-side-section,
+	.page-actions,
+	.form-sidebar,
+	.comment-box {
+		display: none !important;
+	}
+
+	body {
+		background: #FFFFFF;
+	}
+
+	/* brand colours cost ink and often print muddy; keep documents monochrome */
+	.page-head,
+	.form-section,
+	.widget {
+		border-color: #CCCCCC;
+		box-shadow: none;
+	}
+}
+
+/* ==========================================================================
+   Small brand flourishes
+   ========================================================================== */
+::selection {
+	background: var(--fedco-200);
+	color: var(--fedco-900);
+}
+
+::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--fedco-200);
+	border-radius: var(--radius-full);
+	border: 2px solid transparent;
+	background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--fedco-300);
+	background-clip: content-box;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+	background: #4A3830;
+	background-clip: content-box;
+}
+
+/* avatars fall back to the brand rather than stock palette */
+.avatar-frame {
+	background-color: var(--fedco-100);
+	color: var(--fedco-700);
+}
+
+/* onboarding / empty states */
+.msg-box .btn-primary,
+.no-result .btn-primary {
+	background-color: var(--fedco-500);
+	border-color: var(--fedco-500);
+}

@@ -1,0 +1,273 @@
+/* ==========================================================================
+   FEDCO Theme — website, login and portal
+   --------------------------------------------------------------------------
+   Reproduces the split-screen sign-in from the reference design in the FEDCO
+   palette: a brand panel on the left, the form on a clean ground to the right.
+   Collapses to a single column with a compact brand header on small screens.
+   ========================================================================== */
+
+:root {
+	--fedco-500: #984A35;
+	--fedco-600: #863F2C;
+	--fedco-700: #6B3222;
+	--fedco-800: #52261A;
+	--fedco-gold: #F8C525;
+	--fedco-green: #1D9644;
+	--fedco-ink: #2A1A14;
+	--fedco-50: #FDF6F3;
+	--fedco-100: #F7E4DD;
+	--fedco-200: #EFC7BA;
+	--fedco-300: #DDA08B;
+}
+
+body.login-page,
+.page_content .login-content,
+body[data-path="login"] {
+	background-color: #FFFFFF;
+}
+
+/* ---- split layout ------------------------------------------------------- */
+body[data-path="login"] .page_content {
+	min-height: 100vh;
+	position: relative;
+}
+
+/* Brand panel. The curved right edge echoes the circular FEDCO mark.
+   Fixed and behind the form, so the form column scrolls independently. */
+body[data-path="login"] .page_content::before {
+	content: "";
+	position: fixed;
+	inset: 0 auto 0 0;
+	width: 44%;
+	background:
+		radial-gradient(circle at 22% 26%, rgba(248, 197, 37, 0.20) 0%, transparent 45%),
+		radial-gradient(circle at 78% 82%, rgba(29, 150, 68, 0.22) 0%, transparent 50%),
+		linear-gradient(150deg, var(--fedco-600) 0%, var(--fedco-800) 100%);
+	border-radius: 0 46% 46% 0 / 0 50% 50% 0;
+	z-index: 0;
+	pointer-events: none;
+}
+
+/* strapline over the brand panel */
+body[data-path="login"] .page_content::after {
+	content: "Field to Ledger. One System.";
+	position: fixed;
+	left: 5%;
+	bottom: 16%;
+	width: 30%;
+	color: #FBEDE8;
+	font-size: clamp(1.4rem, 2.4vw, 2.3rem);
+	font-weight: 600;
+	line-height: 1.28;
+	letter-spacing: -0.01em;
+	z-index: 1;
+	pointer-events: none;
+}
+
+/* push the card into the right half */
+body[data-path="login"] .for-login,
+body[data-path="login"] .for-forgot,
+body[data-path="login"] .for-signup,
+body[data-path="login"] .for-email-login,
+body[data-path="login"] .login-content {
+	position: relative;
+	z-index: 2;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 420px;
+	padding: 40px 34px;
+	background: #FFFFFF;
+	border-radius: 16px;
+	border: 1px solid #EADFDA;
+	box-shadow: 0 18px 48px rgba(58, 27, 18, 0.13);
+}
+
+@media (min-width: 992px) {
+	body[data-path="login"] .for-login,
+	body[data-path="login"] .for-forgot,
+	body[data-path="login"] .for-signup,
+	body[data-path="login"] .for-email-login,
+	body[data-path="login"] .login-content {
+		margin-left: 58%;
+		margin-right: 4%;
+	}
+}
+
+/* ---- brand lockup ------------------------------------------------------- */
+.login-content .page-card-head,
+body[data-path="login"] .page-card-head {
+	text-align: left;
+	border: none;
+	padding-bottom: 4px;
+}
+
+body[data-path="login"] .page-card-head img,
+.login-content img.app-logo {
+	height: 54px;
+	width: auto;
+	margin-bottom: 14px;
+}
+
+body[data-path="login"] .page-card-head h4,
+.login-content h4 {
+	color: var(--fedco-ink);
+	font-weight: 700;
+	font-size: 1.45rem;
+	letter-spacing: -0.01em;
+	margin-bottom: 2px;
+}
+
+/* thin tricolour rule under the heading — the whole palette, no text on it */
+body[data-path="login"] .page-card-head::after {
+	content: "";
+	display: block;
+	width: 56px;
+	height: 3px;
+	margin-top: 12px;
+	border-radius: 3px;
+	background: linear-gradient(90deg, var(--fedco-500) 0%, var(--fedco-gold) 55%, var(--fedco-green) 100%);
+}
+
+/* ---- form --------------------------------------------------------------- */
+body[data-path="login"] .form-control,
+.login-content .form-control {
+	height: 46px;
+	border-radius: 9px;
+	border: 1px solid #E2D5D0;
+	background: #FFFFFF;
+	font-size: 15px;
+	padding-left: 14px;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+body[data-path="login"] .form-control:focus,
+.login-content .form-control:focus {
+	border-color: var(--fedco-300);
+	box-shadow: 0 0 0 3px rgba(152, 74, 53, 0.24);
+	outline: none;
+}
+
+body[data-path="login"] .btn-primary,
+.login-content .btn-primary,
+body[data-path="login"] .btn-login,
+body[data-path="login"] .btn-block {
+	background: var(--fedco-500);
+	border-color: var(--fedco-500);
+	color: #FFFFFF;
+	height: 46px;
+	border-radius: 9px;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	box-shadow: 0 2px 8px rgba(152, 74, 53, 0.28);
+	transition: background-color 0.15s ease, transform 0.05s ease;
+}
+
+body[data-path="login"] .btn-primary:hover,
+.login-content .btn-primary:hover {
+	background: var(--fedco-600);
+	border-color: var(--fedco-600);
+}
+
+body[data-path="login"] .btn-primary:active {
+	transform: translateY(1px);
+}
+
+body[data-path="login"] a,
+.login-content a {
+	color: var(--fedco-600);
+	font-weight: 500;
+}
+
+body[data-path="login"] a:hover {
+	color: var(--fedco-700);
+	text-decoration: underline;
+}
+
+/* ---- responsive: single column ------------------------------------------ */
+@media (max-width: 991.98px) {
+	body[data-path="login"] .page_content::before {
+		position: absolute;
+		width: 100%;
+		height: 210px;
+		border-radius: 0 0 42% 42% / 0 0 22% 22%;
+	}
+
+	/* the strapline competes with the form on a narrow screen */
+	body[data-path="login"] .page_content::after {
+		display: none;
+	}
+
+	body[data-path="login"] .for-login,
+	body[data-path="login"] .login-content {
+		margin-top: 140px;
+		margin-left: auto;
+		margin-right: auto;
+		max-width: 420px;
+	}
+}
+
+@media (max-width: 575.98px) {
+	body[data-path="login"] .for-login,
+	body[data-path="login"] .login-content {
+		margin-top: 120px;
+		padding: 28px 22px;
+		border-radius: 14px;
+	}
+
+	body[data-path="login"] .page-card-head img {
+		height: 46px;
+	}
+
+	/* 16px prevents iOS zooming on focus */
+	body[data-path="login"] .form-control {
+		font-size: 16px;
+	}
+}
+
+/* ==========================================================================
+   Portal pages (employee self-service: claims, advances, payslips)
+   ========================================================================== */
+.web-sidebar .sidebar-item.active a,
+.web-sidebar a:hover {
+	color: var(--fedco-600);
+}
+
+.website-content .btn-primary,
+.page-content .btn-primary {
+	background-color: var(--fedco-500);
+	border-color: var(--fedco-500);
+}
+
+.website-content .btn-primary:hover {
+	background-color: var(--fedco-600);
+	border-color: var(--fedco-600);
+}
+
+.navbar.navbar-light {
+	background-color: #FFFFFF !important;
+	border-bottom: 1px solid #EADFDA;
+}
+
+.navbar.navbar-light .navbar-brand img {
+	height: 30px;
+}
+
+footer {
+	border-top: 1px solid #EADFDA;
+	background: var(--fedco-50);
+}
+
+/* status pills on portal lists */
+.indicator-pill.green { background: #E3F5E9; color: #106B2E; }
+.indicator-pill.orange { background: #FDF0C4; color: #7A5B02; }
+.indicator-pill.red { background: #FCE9E6; color: #A32D18; }
+.indicator-pill.blue { background: var(--fedco-100); color: var(--fedco-700); }
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		transition-duration: 0.01ms !important;
+		animation-duration: 0.01ms !important;
+	}
+}
