@@ -308,6 +308,115 @@
 }
 
 /* ==========================================================================
+   Desk sidebar — Frappe v16
+   --------------------------------------------------------------------------
+   v16 rebuilt the desk sidebar, so the older --sidebar-bg variable is no
+   longer read. These rules name the v16 containers directly.
+
+   Background and foreground are always set together in the same rule. If a
+   selector does not match the installed version nothing happens; if it does,
+   the text is guaranteed to be legible. A rule that set only the background
+   could leave dark text on a dark panel.
+   ========================================================================== */
+.body-sidebar,
+.desk-sidebar,
+.layout-side-section > .sidebar,
+.standard-sidebar {
+	background-color: var(--fedco-700);
+	color: var(--sidebar-fg);
+	border-right: 1px solid rgba(0, 0, 0, 0.18);
+}
+
+.body-sidebar a,
+.body-sidebar .sidebar-item,
+.body-sidebar .standard-sidebar-item,
+.body-sidebar .sidebar-item-label,
+.body-sidebar .item-anchor,
+.desk-sidebar a,
+.desk-sidebar .desk-sidebar-item,
+.standard-sidebar .standard-sidebar-item {
+	color: var(--sidebar-fg);
+}
+
+.body-sidebar .sidebar-item:hover,
+.body-sidebar .standard-sidebar-item:hover,
+.body-sidebar .item-anchor:hover,
+.desk-sidebar .desk-sidebar-item:hover {
+	background-color: var(--sidebar-hover-bg);
+	color: #FFFFFF;
+}
+
+.body-sidebar .sidebar-item.selected,
+.body-sidebar .standard-sidebar-item.selected,
+.body-sidebar .item-anchor.active,
+.desk-sidebar .desk-sidebar-item.selected {
+	background-color: var(--sidebar-active-bg);
+	color: #FFFFFF;
+	font-weight: 600;
+}
+
+/* gold active rail, matching the reference layout */
+.body-sidebar .sidebar-item.selected::before,
+.body-sidebar .standard-sidebar-item.selected::before,
+.desk-sidebar .desk-sidebar-item.selected::before {
+	background: var(--fedco-gold);
+}
+
+/* icons and secondary text inside the panel */
+.body-sidebar svg,
+.body-sidebar .icon,
+.desk-sidebar svg {
+	stroke: currentColor;
+	color: var(--sidebar-fg);
+}
+
+.body-sidebar .text-muted,
+.body-sidebar .sidebar-label,
+.body-sidebar small {
+	color: rgba(247, 233, 228, 0.66);
+}
+
+/* the workspace switcher and footer rows sit on the same panel */
+.body-sidebar .dropdown-toggle,
+.body-sidebar .sidebar-footer,
+.body-sidebar .collapse-sidebar {
+	color: var(--sidebar-fg);
+}
+
+.body-sidebar .divider,
+.body-sidebar hr {
+	border-color: rgba(255, 255, 255, 0.14);
+	background-color: rgba(255, 255, 255, 0.14);
+}
+
+/* search field inside the sidebar */
+.body-sidebar input,
+.body-sidebar .form-control {
+	background-color: rgba(255, 255, 255, 0.10);
+	border-color: rgba(255, 255, 255, 0.16);
+	color: var(--sidebar-fg);
+}
+
+.body-sidebar input::placeholder {
+	color: rgba(247, 233, 228, 0.60);
+}
+
+/* Escape hatch: add class "fedco-light-sidebar" to <body> to return the
+   sidebar to the stock light panel while keeping the rest of the theme. */
+body.fedco-light-sidebar .body-sidebar,
+body.fedco-light-sidebar .desk-sidebar,
+body.fedco-light-sidebar .standard-sidebar {
+	background-color: var(--fg-color);
+	color: var(--text-color);
+}
+
+body.fedco-light-sidebar .body-sidebar a,
+body.fedco-light-sidebar .body-sidebar .sidebar-item {
+	color: var(--text-color);
+}
+
+
+/* ==========================================================================
    Buttons
    ========================================================================== */
 .btn {

@@ -1,9 +1,21 @@
 /* ==========================================================================
    FEDCO Theme — website, login and portal
    --------------------------------------------------------------------------
-   Reproduces the split-screen sign-in from the reference design in the FEDCO
-   palette: a brand panel on the left, the form on a clean ground to the right.
-   Collapses to a single column with a compact brand header on small screens.
+   IMPORTANT — Frappe's login DOM nests like this:
+
+       .page_content
+         └ .container.page-card-container
+             └ .page-card                 <- THE CARD. Style this one.
+                 ├ .page-card-head
+                 └ form.form-signin
+                     └ .page-card-body
+                         ├ .for-login     <- inner sections, NOT cards
+                         ├ .for-forgot
+                         └ .for-email-login
+
+   Styling .for-login as a card produces a card nested inside a card and
+   squeezes the form into a narrow column. Those inner sections are therefore
+   explicitly neutralised below. Only .page-card carries card styling.
    ========================================================================== */
 
 :root {
@@ -20,104 +32,137 @@
 	--fedco-300: #DDA08B;
 }
 
-body.login-page,
-.page_content .login-content,
+/* ==========================================================================
+   Login page
+   ========================================================================== */
 body[data-path="login"] {
 	background-color: #FFFFFF;
-}
-
-/* ---- split layout ------------------------------------------------------- */
-body[data-path="login"] .page_content {
 	min-height: 100vh;
-	position: relative;
 }
 
-/* Brand panel. The curved right edge echoes the circular FEDCO mark.
-   Fixed and behind the form, so the form column scrolls independently. */
-body[data-path="login"] .page_content::before {
+/* The page becomes a flex row: the brand panel occupies the left, the card is
+   pushed right. Flex rather than percentage margins, so the card cannot drift
+   or overlap the panel at intermediate widths. */
+body[data-path="login"] .page_content {
+	position: relative;
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	padding: 40px 4vw;
+}
+
+body[data-path="login"] .page_content > .section,
+body[data-path="login"] .page_content > section {
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+}
+
+/* Brand panel. Fixed so it never scrolls with the form; negative z-index so it
+   can never intercept a click on the form. */
+body[data-path="login"]::before {
 	content: "";
 	position: fixed;
-	inset: 0 auto 0 0;
-	width: 44%;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: 46%;
 	background:
 		radial-gradient(circle at 22% 26%, rgba(248, 197, 37, 0.20) 0%, transparent 45%),
 		radial-gradient(circle at 78% 82%, rgba(29, 150, 68, 0.22) 0%, transparent 50%),
 		linear-gradient(150deg, var(--fedco-600) 0%, var(--fedco-800) 100%);
 	border-radius: 0 46% 46% 0 / 0 50% 50% 0;
-	z-index: 0;
+	z-index: -1;
 	pointer-events: none;
 }
 
-/* strapline over the brand panel */
-body[data-path="login"] .page_content::after {
+body[data-path="login"]::after {
 	content: "Field to Ledger. One System.";
 	position: fixed;
-	left: 5%;
-	bottom: 16%;
-	width: 30%;
+	left: 4%;
+	bottom: 14%;
+	width: 32%;
+	max-width: 460px;
 	color: #FBEDE8;
-	font-size: clamp(1.4rem, 2.4vw, 2.3rem);
+	font-size: clamp(1.3rem, 2.1vw, 2.1rem);
 	font-weight: 600;
 	line-height: 1.28;
 	letter-spacing: -0.01em;
-	z-index: 1;
+	z-index: -1;
 	pointer-events: none;
 }
 
-/* push the card into the right half */
+/* ---- the card ----------------------------------------------------------- */
+body[data-path="login"] .page-card-container {
+	width: 100%;
+	max-width: 430px;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	justify-content: flex-end;
+}
+
+body[data-path="login"] .page-card {
+	width: 100%;
+	max-width: 430px;
+	margin: 0;
+	padding: 38px 34px;
+	background: #FFFFFF;
+	border: 1px solid #EADFDA;
+	border-radius: 16px;
+	box-shadow: 0 18px 48px rgba(58, 27, 18, 0.13);
+}
+
+/* ---- inner sections must never look like cards -------------------------- */
+body[data-path="login"] .page-card-body,
+body[data-path="login"] .form-signin,
 body[data-path="login"] .for-login,
 body[data-path="login"] .for-forgot,
 body[data-path="login"] .for-signup,
 body[data-path="login"] .for-email-login,
-body[data-path="login"] .login-content {
-	position: relative;
-	z-index: 2;
-	margin-left: auto;
-	margin-right: auto;
-	max-width: 420px;
-	padding: 40px 34px;
-	background: #FFFFFF;
-	border-radius: 16px;
-	border: 1px solid #EADFDA;
-	box-shadow: 0 18px 48px rgba(58, 27, 18, 0.13);
+body[data-path="login"] .for-login-with-email-link {
+	max-width: none;
+	width: auto;
+	margin: 0;
+	padding: 0;
+	background: none;
+	border: none;
+	border-radius: 0;
+	box-shadow: none;
 }
 
-@media (min-width: 992px) {
-	body[data-path="login"] .for-login,
-	body[data-path="login"] .for-forgot,
-	body[data-path="login"] .for-signup,
-	body[data-path="login"] .for-email-login,
-	body[data-path="login"] .login-content {
-		margin-left: 58%;
-		margin-right: 4%;
-	}
+/* Frappe toggles these sections with .hide; nothing above may defeat it. */
+body[data-path="login"] .hide {
+	display: none !important;
 }
 
 /* ---- brand lockup ------------------------------------------------------- */
-.login-content .page-card-head,
 body[data-path="login"] .page-card-head {
 	text-align: left;
 	border: none;
-	padding-bottom: 4px;
+	padding: 0 0 4px;
+	margin-bottom: 22px;
 }
 
-body[data-path="login"] .page-card-head img,
-.login-content img.app-logo {
-	height: 54px;
+body[data-path="login"] .page-card-head .app-logo,
+body[data-path="login"] .page-card-head img {
+	height: 52px;
 	width: auto;
+	max-width: 100%;
 	margin-bottom: 14px;
+	display: block;
 }
 
-body[data-path="login"] .page-card-head h4,
-.login-content h4 {
+body[data-path="login"] .page-card-head h4 {
 	color: var(--fedco-ink);
 	font-weight: 700;
-	font-size: 1.45rem;
+	font-size: 1.4rem;
 	letter-spacing: -0.01em;
-	margin-bottom: 2px;
+	margin: 0;
 }
 
-/* thin tricolour rule under the heading — the whole palette, no text on it */
+/* tricolour rule — all three brand colours, carrying no text */
 body[data-path="login"] .page-card-head::after {
 	content: "";
 	display: block;
@@ -128,52 +173,98 @@ body[data-path="login"] .page-card-head::after {
 	background: linear-gradient(90deg, var(--fedco-500) 0%, var(--fedco-gold) 55%, var(--fedco-green) 100%);
 }
 
-/* ---- form --------------------------------------------------------------- */
-body[data-path="login"] .form-control,
-.login-content .form-control {
+/* ---- form controls ------------------------------------------------------ */
+body[data-path="login"] .form-control {
 	height: 46px;
+	width: 100%;
 	border-radius: 9px;
 	border: 1px solid #E2D5D0;
 	background: #FFFFFF;
 	font-size: 15px;
-	padding-left: 14px;
+	padding: 6px 14px;
+	color: var(--fedco-ink);
 	transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-body[data-path="login"] .form-control:focus,
-.login-content .form-control:focus {
+body[data-path="login"] .form-control:focus {
 	border-color: var(--fedco-300);
 	box-shadow: 0 0 0 3px rgba(152, 74, 53, 0.24);
 	outline: none;
 }
 
+body[data-path="login"] label,
+body[data-path="login"] .control-label {
+	color: #6B5A54;
+	font-size: 0.82rem;
+	font-weight: 500;
+}
+
+body[data-path="login"] .password-field {
+	position: relative;
+}
+
+body[data-path="login"] .toggle-password {
+	position: absolute;
+	right: 12px;
+	bottom: 12px;
+	color: var(--fedco-600);
+	font-size: 0.78rem;
+	cursor: pointer;
+	background: transparent;
+	border: none;
+	z-index: 2;
+}
+
+/* ---- buttons ------------------------------------------------------------ */
 body[data-path="login"] .btn-primary,
-.login-content .btn-primary,
-body[data-path="login"] .btn-login,
-body[data-path="login"] .btn-block {
+body[data-path="login"] .btn-login {
 	background: var(--fedco-500);
 	border-color: var(--fedco-500);
 	color: #FFFFFF;
-	height: 46px;
+	min-height: 46px;
 	border-radius: 9px;
 	font-weight: 600;
-	letter-spacing: 0.01em;
+	font-size: 0.95rem;
 	box-shadow: 0 2px 8px rgba(152, 74, 53, 0.28);
 	transition: background-color 0.15s ease, transform 0.05s ease;
+	/* Frappe replaces the label with "Invalid Login. Try again" on failure, so
+	   the button has to be able to wrap rather than overflow the card. */
+	white-space: normal;
+	line-height: 1.3;
+	padding: 10px 16px;
+	height: auto;
 }
 
 body[data-path="login"] .btn-primary:hover,
-.login-content .btn-primary:hover {
+body[data-path="login"] .btn-login:hover {
 	background: var(--fedco-600);
 	border-color: var(--fedco-600);
+	color: #FFFFFF;
 }
 
 body[data-path="login"] .btn-primary:active {
 	transform: translateY(1px);
 }
 
-body[data-path="login"] a,
-.login-content a {
+body[data-path="login"] .btn-default {
+	background: #FFFFFF;
+	border: 1px solid #E2D5D0;
+	color: var(--fedco-ink);
+	min-height: 44px;
+	height: auto;
+	border-radius: 9px;
+	font-weight: 500;
+	white-space: normal;
+	line-height: 1.3;
+}
+
+body[data-path="login"] .btn-default:hover {
+	background: var(--fedco-50);
+	border-color: var(--fedco-300);
+	color: var(--fedco-700);
+}
+
+body[data-path="login"] a {
 	color: var(--fedco-600);
 	font-weight: 500;
 }
@@ -183,42 +274,81 @@ body[data-path="login"] a:hover {
 	text-decoration: underline;
 }
 
-/* ---- responsive: single column ------------------------------------------ */
-@media (max-width: 991.98px) {
-	body[data-path="login"] .page_content::before {
-		position: absolute;
-		width: 100%;
-		height: 210px;
-		border-radius: 0 0 42% 42% / 0 0 22% 22%;
+body[data-path="login"] .forgot-password-message {
+	display: inline-block;
+	margin-top: 4px;
+	font-size: 0.85rem;
+}
+
+/* alerts must stay inside the card */
+body[data-path="login"] .page-card .alert,
+body[data-path="login"] #login-alert,
+body[data-path="login"] .login-alert {
+	border-radius: 9px;
+	font-size: 0.85rem;
+	word-break: break-word;
+	white-space: normal;
+	background: #FCE9E6;
+	color: #A32D18;
+	border: none;
+}
+
+/* ---- tablet: brand becomes a banner, card centres ----------------------- */
+@media (max-width: 1024px) {
+	body[data-path="login"] .page_content {
+		justify-content: center;
+		align-items: flex-start;
+		padding: 0 24px 48px;
 	}
 
-	/* the strapline competes with the form on a narrow screen */
-	body[data-path="login"] .page_content::after {
+	body[data-path="login"] .page_content > .section,
+	body[data-path="login"] .page_content > section {
+		justify-content: center;
+	}
+
+	body[data-path="login"] .page-card-container {
+		justify-content: center;
+		margin: 0 auto;
+	}
+
+	body[data-path="login"]::before {
+		position: absolute;
+		width: 100%;
+		height: 220px;
+		border-radius: 0 0 44% 44% / 0 0 24% 24%;
+	}
+
+	/* the strapline competes with the form once they share a column */
+	body[data-path="login"]::after {
 		display: none;
 	}
 
-	body[data-path="login"] .for-login,
-	body[data-path="login"] .login-content {
-		margin-top: 140px;
-		margin-left: auto;
-		margin-right: auto;
-		max-width: 420px;
+	body[data-path="login"] .page-card {
+		margin-top: 150px;
 	}
 }
 
+/* ---- phone -------------------------------------------------------------- */
 @media (max-width: 575.98px) {
-	body[data-path="login"] .for-login,
-	body[data-path="login"] .login-content {
-		margin-top: 120px;
+	body[data-path="login"] .page_content {
+		padding: 0 14px 32px;
+	}
+
+	body[data-path="login"]::before {
+		height: 180px;
+	}
+
+	body[data-path="login"] .page-card {
+		margin-top: 118px;
 		padding: 28px 22px;
 		border-radius: 14px;
 	}
 
-	body[data-path="login"] .page-card-head img {
-		height: 46px;
+	body[data-path="login"] .page-card-head .app-logo {
+		height: 44px;
 	}
 
-	/* 16px prevents iOS zooming on focus */
+	/* 16px stops iOS zooming the page when a field takes focus */
 	body[data-path="login"] .form-control {
 		font-size: 16px;
 	}
@@ -238,13 +368,14 @@ body[data-path="login"] a:hover {
 	border-color: var(--fedco-500);
 }
 
-.website-content .btn-primary:hover {
+.website-content .btn-primary:hover,
+.page-content .btn-primary:hover {
 	background-color: var(--fedco-600);
 	border-color: var(--fedco-600);
 }
 
 .navbar.navbar-light {
-	background-color: #FFFFFF !important;
+	background-color: #FFFFFF;
 	border-bottom: 1px solid #EADFDA;
 }
 
@@ -257,7 +388,6 @@ footer {
 	background: var(--fedco-50);
 }
 
-/* status pills on portal lists */
 .indicator-pill.green { background: #E3F5E9; color: #106B2E; }
 .indicator-pill.orange { background: #FDF0C4; color: #7A5B02; }
 .indicator-pill.red { background: #FCE9E6; color: #A32D18; }
