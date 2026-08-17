@@ -7,7 +7,7 @@ app_publisher = "FEDCO"
 app_description = "FEDCO brand theme for ERPNext v16: desk, login and portal"
 app_email = "it@fedco.example"
 app_license = "mit"
-app_version = "1.0.0"
+app_version = "1.0.1"
 
 # Desk (the logged-in application)
 app_include_css = "/assets/fedco_theme/css/fedco_theme.css"
